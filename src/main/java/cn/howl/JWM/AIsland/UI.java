@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.*;
 
 /**
@@ -20,6 +22,7 @@ public class UI {
     private JCheckBox isPack;
     private JTextField MaxPage;
     private JTextField SPage;
+    private JProgressBar progressBar;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("A岛图片收集者");
@@ -28,9 +31,14 @@ public class UI {
         frame.pack();
         frame.setVisible(true);
 
+
     }
 
     public UI() {
+        urlPath.setText("https://h.nimingban.com/f/SNH48");
+        localPath.setText("e:/test");
+        SPage.setText("5");
+        MaxPage.setText("4");
         //将控制台的信息输出到textArea
         PrintStream printStream = new PrintStream(new MyOutputStream(commend));
         System.setOut(printStream);
@@ -38,17 +46,32 @@ public class UI {
 
         Button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                //获取属性
                 String url = urlPath.getText();
                 String local = localPath.getText();
                 boolean pack = isPack.isSelected();
                 int sPage = Integer.parseInt(SPage.getText());
                 int maxPage = Integer.parseInt(MaxPage.getText());
+                //创建异步
                 MySwingWorker sw = new MySwingWorker(url,local,pack,maxPage,sPage);
+                //绑定监听器
+                sw.addPropertyChangeListener(new MyPCListener());
                 sw.execute();
             }
         });
     }
 
+    class MyPCListener implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if("progress"==evt.getPropertyName()){
+                int progress = (Integer)evt.getNewValue();
+                progressBar.setValue(progress);
+            }
+        }
+
+    }
 
 
 }

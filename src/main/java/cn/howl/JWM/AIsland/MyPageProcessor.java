@@ -40,7 +40,7 @@ public class MyPageProcessor implements PageProcessor {
                 page.putField(ThreadNum, ThreadName);
             }
             page.putField("ThreadNum",ThreadNum);
-            logger.info("otherPage " + page.getUrl());
+//            logger.info("otherPage " + page.getUrl());
             //判断是否需要页面处理
             if (!page.getUrl().regex("\\?page=").match()) {
                 //获取分页数
