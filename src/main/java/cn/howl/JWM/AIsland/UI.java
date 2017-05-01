@@ -1,5 +1,6 @@
 package cn.howl.JWM.AIsland;
 
+import com.google.gson.Gson;
 import us.codecraft.webmagic.Spider;
 
 import javax.swing.*;
@@ -23,6 +24,7 @@ public class UI {
     private JTextField MaxPage;
     private JTextField SPage;
     private JProgressBar progressBar;
+    private JComboBox textField1;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("A岛图片收集者");
