@@ -61,7 +61,7 @@ public class MyPipeline implements Pipeline {
             downNum += new Download(img, dir.getPath() +"\\").call();
 
         }
-        logger.info("下载了"+downNum+"张图片");
+        logger.info("下载了"+downNum+"张图片,跳过已下载的文件");
     }
 }
 
