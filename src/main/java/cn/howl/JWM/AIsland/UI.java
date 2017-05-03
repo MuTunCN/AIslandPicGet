@@ -1,12 +1,7 @@
 package cn.howl.JWM.AIsland;
 
-import com.google.gson.Gson;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.model.ConsolePageModelPipeline;
-import us.codecraft.webmagic.model.OOSpider;
 import us.codecraft.xsoup.Xsoup;
 
 import javax.swing.*;
@@ -38,6 +33,11 @@ public class UI {
     public static void main(String[] args) {
         JFrame frame = new JFrame("A岛图片收集者");
         frame.setContentPane(new UI().panel1);
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
@@ -46,8 +46,8 @@ public class UI {
     }
 
     public UI() {
-        urlPath.setText("https://h.nimingban.com/f/SNH48");
-        localPath.setText("e:/test");
+        urlPath.setText("https://h.nimingban.com/t/117617");
+        localPath.setText("e:/AIslandPicGet");
         SPage.setText("5");
         MaxPage.setText("4");
         //设置板块列表
@@ -76,10 +76,11 @@ public class UI {
                 }
                 int sPage = Integer.parseInt(SPage.getText());
                 int maxPage = Integer.parseInt(MaxPage.getText());
-                int threadNum = Integer.parseInt(ThreadNum.getText());
+                int threadNum = (ThreadNum.getText().equals("")) ? 5 : Integer.parseInt(ThreadNum.getText());
                 UrlInfo urlInfo = new UrlInfo(url, pack,isMuliThread ,local, sPage, maxPage,threadNum);
                 //创建异步
                 MySwingWorker sw = new MySwingWorker(urlInfo);
+                Button.setEnabled(false);
                 //绑定监听器
                 sw.addPropertyChangeListener(new MyPCListener());
                 sw.execute();
@@ -94,6 +95,9 @@ public class UI {
             if("progress"==evt.getPropertyName()){
                 int progress = (Integer)evt.getNewValue();
                 progressBar.setValue(progress);
+                if (progress == 100) {
+                    Button.setEnabled(true);
+                }
             }
         }
 

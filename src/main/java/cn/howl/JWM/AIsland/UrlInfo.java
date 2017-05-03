@@ -37,7 +37,7 @@ public class UrlInfo {
     }
 
     public void setmultiThread(int multiThread) {
-        multiThread = multiThread;
+        this.multiThread = multiThread;
     }
 
     public String getUrlPath() {
