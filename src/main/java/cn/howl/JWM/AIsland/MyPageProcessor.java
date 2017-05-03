@@ -43,27 +43,17 @@ public class MyPageProcessor implements PageProcessor {
 //            logger.info("otherPage " + page.getUrl());
             //判断是否需要页面处理
             if (!page.getUrl().regex("\\?page=").match()) {
-                //获取分页数
-                List<String> otherPageStatus = page.getHtml().xpath("//ul[@class='uk-pagination uk-pagination-left h-pagination']/li/a/text()").all();
-                //检测有末页就提示 没有末页就去下一页的前面一个数字然后循环添加
-                if (otherPageStatus.indexOf("末页") != -1) {
-                    String path = page.getHtml().xpath("//ul[@class='uk-pagination uk-pagination-left h-pagination']/li[14]/a/@href").toString();
-                    int ThreadMaxPage = Integer.parseInt(path.substring(path.lastIndexOf("=") + 1, path.length()));
-                    logger.info("这个串居然有" + ThreadMaxPage + "页!!所以最大只取了前" + maxPage + "页");
-                    maxPage = (maxPage > ThreadMaxPage) ? ThreadMaxPage : maxPage;
-                    //循环添加
-                    for (int i = 1; i <= maxPage; i++) {
-                        page.addTargetRequest(page.getUrl() + "?page=" + i);
+
+                    int ThreadMaxPage = new PageInfo(page.getUrl().toString()).getPageNum();
+                    if (ThreadMaxPage > maxPage) {
+                        logger.info("这个串居然有" + ThreadMaxPage + "页!!所以最大只取了前" + maxPage + "页");
                     }
-                } else if (!otherPageStatus.isEmpty()) {
-                    //获得到最大页数
-                    int ThreadMaxPage = Integer.parseInt(otherPageStatus.get(otherPageStatus.indexOf("下一页") - 1));
-                    logger.info("这个串有" + ThreadMaxPage + "页");
+                ThreadMaxPage = (maxPage > ThreadMaxPage) ? ThreadMaxPage : maxPage;
                     //循环添加
                     for (int i = 1; i <= ThreadMaxPage; i++) {
                         page.addTargetRequest(page.getUrl() + "?page=" + i);
                     }
-                }
+
             }
 //            page.putField("ThreadHrefOtherPage", page.getHtml().xpath("//*[@id=\"h-content\"]/div[1]/ul/li/a").links().all());
 //            page.addTargetRequests((List<String>) page.getResultItems().get("ThreadHrefOtherPage"));

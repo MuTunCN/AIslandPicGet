@@ -50,9 +50,9 @@ public class Download implements Callable<Integer> {
             fos.close();
             return 1;
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.error("格式错误");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("下载失败，稍后自动重试");
         }
         return 0;
     }
